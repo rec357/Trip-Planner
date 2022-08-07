@@ -8,6 +8,7 @@ def trip_planner():
         <form>
             <label for="Zipcode"> Please input the zipcode of where you wish to travel:</label><br>
              <input type="text" id="Zipcode" name="Zipcode"><br>
+             <input type="submit" value="Submit">
         </form>
 
     """
