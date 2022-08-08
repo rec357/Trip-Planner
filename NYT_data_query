@@ -1,0 +1,58 @@
+import os
+import time
+import json
+import requests
+from datetime import datetime
+from dateutil import relativedelta
+
+api_key = "mQynWWyFXjMp01seJaNaVMj56YY1cSiv"
+section = "Business Day"
+output_data =  []
+#If you want a range of dates... needs a little work
+#start_date = "01/2020"
+#end_date = "05/2021"
+date = ["2020", "9"]
+#keyword = ""
+
+def get_raw_data(date):
+    api_url = "https://api.nytimes.com/svc/archive/v1/"+date[0]+"/"+date[1]+".json?api-key="+api_key
+    all_articles = requests.get(api_url).json()
+    time.sleep(10)  #there is a query frequency limit
+    return all_articles["response"]["docs"]
+
+
+def parse_by_section(section,articles):
+    for a in articles:
+        if a["section_name"] == section:
+            a_subset = {key: a[key] for key in ["headline","web_url","section_name"]}
+            output_data.append(a_subset)
+        else:
+            pass
+        #If you want to add a keyword
+        #elif keyword in a["headline"]["main"]:
+        #    a_subset = {key: a[key] for key in ["headline","web_url","section_name"]}
+        #    output_data.append(a)
+    return output_data
+
+#For a range of dates, requires a little work
+#def date_input_list(start_date, end_date):
+#    delta = relativedelta.relativedelta(datetime.strptime(end_date, "%m/%Y"), datetime.strptime(start_date, "%m/%Y"))
+#    print(delta.months+(delta.years * 12))
+#    print(datetime.strptime(end_date, "%m/%Y"))
+
+
+        
+def get_articles(date,section):
+    #date_list = date_input_list(date_range)
+    #for date in date_list:
+    all = get_raw_data(date)
+    parsed_data = parse_by_section(section,all)
+    print(parsed_data)
+    return parsed_data
+
+
+
+
+get_articles(date,section)
+
+#date_input_list(start_date, end_date)
